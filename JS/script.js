@@ -99,6 +99,136 @@ function initializeFirebase() {
   db = firebase.firestore();
 }
 
+// Function to load complaint cards
+function loadComplaintCards() {
+  const complaintsList = document.querySelector(".complaints-list");
+  if (!complaintsList) {
+    return;
+  }
+
+  const cardUrl = "../Templates/complaint-card.html";
+
+  // Data for the cards
+  const complaints = [
+    {
+      ticketId: "#TKT-001",
+      status: "pending",
+      issue: "Water Leakage",
+      location: "Apartment 5B, Tower A",
+      date: "Jun 28, 2024",
+    },
+    {
+      ticketId: "#TKT-002",
+      status: "in-progress",
+      issue: "Elevator Malfunction",
+      location: "Tower B",
+      date: "Jun 27, 2024",
+    },
+    {
+      ticketId: "#TKT-003",
+      status: "resolved",
+      issue: "Noise Complaint",
+      location: "Community Hall",
+      date: "Jun 25, 2024",
+    },
+  ];
+
+  fetch(cardUrl)
+    .then((response) => response.text())
+    .then((html) => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const cardTemplate = doc.querySelector(".complaint-card");
+
+      if (cardTemplate) {
+        complaintsList.innerHTML = ""; // Clear existing content
+        complaints.forEach((complaint) => {
+          const newCard = cardTemplate.cloneNode(true);
+          newCard.querySelector(".ticket-id").textContent = complaint.ticketId;
+          const statusEl = newCard.querySelector(".status");
+          statusEl.className = `status ${complaint.status}`;
+          statusEl.textContent = complaint.status.replace("-", " ");
+          newCard.querySelector(
+            ".card-body"
+          ).innerHTML = `<p><strong>Issue:</strong> ${complaint.issue}</p><p><strong>Location:</strong> ${complaint.location}</p>`;
+          newCard.querySelector(".date").textContent = complaint.date;
+          complaintsList.appendChild(newCard);
+        });
+      }
+    });
+}
+
+// Load external HTML content (like navbar)
+document.addEventListener("DOMContentLoaded", () => {
+  // Load Firebase scripts if not already loaded
+  if (typeof firebase === 'undefined') {
+    loadFirebaseScripts();
+  } else {
+    initializeFirebase();
+  }
+
+  // Load message component
+  loadComponent('message-container', 'message.html');
+
+  // Load navbar if navbar container exists
+  const navbarContainer = document.getElementById('navbar-container');
+  if (navbarContainer) {
+    loadComponent('navbar-container', 'navbar.html').then(() => {
+      // Add other navbar related initializations here
+    });
+  }
+
+  // Load complaint cards on track page
+  if (window.location.pathname.endsWith("track.html")) {
+    loadComplaintCards();
+  }
+
+  // Message system setup
+  // const messageContainer = document.createElement("div");
+  // messageContainer.id = "message-container";
+  // messageContainer.innerHTML = `
+  //   <div id="message-box">
+  //     <span id="message-text"></span>
+  //     <button id="message-close">&times;</button>
+  //   </div>
+  // `;
+  // document.body.appendChild(messageContainer);
+
+  // Check for authentication state changes
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      console.log("User is logged in:", user.email);
+      updateNavbarForLoggedInUser(user);
+    } else {
+      console.log("User is logged out");
+      updateNavbarForLoggedOutUser();
+    }
+  });
+});
+
+  // Initialize AI Assistant if on home page
+  if (window.location.pathname.includes('home.html')) {
+    initializeAIAssistant();
+  }
+
+  // Check authentication state
+  checkAuthState().then((user) => {
+    if (user) {
+      console.log('User is signed in:', user.email);
+      // Redirect to home if on login/signup page
+      if (window.location.pathname.includes('index.html') || 
+          window.location.pathname.includes('signup.html')) {
+        window.location.href = 'home.html';
+      }
+    } else {
+      console.log('User is signed out');
+      // Redirect to login if on home page
+      if (window.location.pathname.includes('home.html')) {
+        window.location.href = 'index.html';
+      }
+    }
+  });
+
 // Authentication functions
 function handleSignup(username, email, password, role) {
   return auth.createUserWithEmailAndPassword(email, password)
