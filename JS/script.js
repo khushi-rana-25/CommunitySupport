@@ -350,21 +350,58 @@ function initializeAIAssistant() {
   if (typeof window.OmniDimension !== 'undefined') {
     console.log('OmniDimension AI Assistant loaded successfully');
     
-    // Configure the AI assistant
+    // Configure the AI assistant with new CommunityCare Assistant settings
     window.OmniDimension.configure({
-      agentName: "ResiVoice Assistant",
-      welcomeMessage: "Hello, you've reached ResiVoice. How can I assist you with your residential needs today?",
+      agentName: "CommunityCare Assistant",
+      welcomeMessage: "Hello, this is CommunityCare Assistant. How can I help you today?",
+      contextBreakdown: [
+        {
+          title: "Listen to the customer's issue and understand it.",
+          body: "Extract the following information from the user's input:\n\nName of the user\n\nAddress (with proper house/flat number)\n\nIssue Type (e.g., plumbing, electricity, cleaning, internet, security)\n\nLocation (e.g., room number or area like kitchen, bathroom, garden)\n\nShort Description (a brief summary of the issue)\n\nIf any of the above details — address, issue type, location, or description — is missing from the user's input, politely ask for that specific information before creating the final ticket.",
+          isEnabled: true
+        },
+        {
+          title: "Assign technician based on priorities.",
+          body: "Assign Priority using the following logic:\n   - Priority P1 – Emergency (fire, gas leak, power outage, safety threat)\n   - Priority P2 – Urgent but not life-threatening (water leakage, broken lock, no internet)\n   - Priority P3 – Normal maintenance (dripping tap, fan not working, AC cooling issue)\n   - Priority P4 – Minor issues or suggestions (dust on lights, general feedback)",
+          isEnabled: true
+        },
+        {
+          title: "Create a ticket with the following fields.",
+          body: "Ensure the ticket includes these details:\n\nAuto-generated Ticket ID\n\nIssue Type (e.g., plumbing, electricity, etc.)\n\nLocation (specific area or room)\n\nDescription (brief summary of the issue)\n\nPriority (P1–P4 based on severity)\n\nTimestamp (date and time of ticket creation)\n\nAssigned Technician (based on specialization and current availability)",
+          isEnabled: true
+        },
+        {
+          title: "Respond to user's queries about the status of the ticket.",
+          body: "When a resident provides a ticket number, respond with the current status of the ticket — such as Assigned, In Progress, or Resolved.\n\nSupport voice queries like:\n\n\"What's the update on ticket 2035?\"\n\nIf the provided ticket number is invalid or not found, respond politely with:\n\n\"Sorry, the ticket number you provided is either incorrect or does not exist. Please check and try again with a valid ticket number.\"",
+          isEnabled: true
+        },
+        {
+          title: "Event Suggestions to Community Managers:",
+          body: "The system suggests community event ideas based on:\n\nPast successful events\n\nFacilities available at the property (e.g., terrace, lounge, garden)\n\nCalendar context (e.g., weekends, festivals, special occasions)\n\nWhen provided with a date, the system checks if a relevant festival or event falls on that day. If so, it recommends engaging group activities that align with the occasion — such as:\n\nFor Teej: Mehendi night, folk dance session, festive fair\n\nFor Independence Day: Flag hoisting, cultural programs, quizzes\n\nFor Raksha Bandhan: Rakhi-making workshop, sibling-themed games\n\nFor Kajari Teej: Bhojpuri music night, women-only gathering\n\nFor Krishna Janmashtami: Dahi Handi, fancy dress, bhajan evening\n\nFor International Friendship Day: Potluck lunch, card-making, movie screening\n\nIf the date has no special occasion, suggest weekend-friendly or seasonal group activities using the available property facilities.",
+          isEnabled: true
+        },
+        {
+          title: "Event Promotion Assistance",
+          body: "Enables the creation and dissemination of event announcements (text or voice-based) across community platforms such as WhatsApp, bulletin boards, and internal apps.",
+          isEnabled: true
+        },
+        {
+          title: "Feedback Collection & Analytics:",
+          body: "Post-event, the assistant collects resident feedback via voice, short surveys, or ratings and generates basic analytics such as attendance count, positive/negative feedback trends, and engagement scores.",
+          isEnabled: true
+        }
+      ],
       onCallStart: function() {
-        console.log('AI Assistant call started');
-        showMessage('AI Assistant is ready to help!', 'info');
+        console.log('CommunityCare Assistant call started');
+        showMessage('CommunityCare Assistant is ready to help!', 'info');
       },
       onCallEnd: function(data) {
-        console.log('AI Assistant call ended', data);
+        console.log('CommunityCare Assistant call ended', data);
         handleAICallEnd(data);
       },
       onError: function(error) {
-        console.error('AI Assistant error:', error);
-        showMessage('AI Assistant encountered an error. Please try again.', 'error');
+        console.error('CommunityCare Assistant error:', error);
+        showMessage('CommunityCare Assistant encountered an error. Please try again.', 'error');
       }
     });
   } else {
@@ -379,25 +416,63 @@ function handleAICallEnd(data) {
     // Extract relevant information from the call
     const extractedData = data.extracted_variables || {};
     
-    // Create complaint object
-    const complaint = {
-      resident_name: extractedData.resident_name || 'Unknown',
-      unit_number: extractedData.unit_number || 'Unknown',
-      issue_description: extractedData.issue_description || data.summary,
+    // Generate a unique ticket ID
+    const ticketId = 'TKT' + Date.now() + Math.random().toString(36).substr(2, 5).toUpperCase();
+    
+    // Create enhanced complaint/ticket object
+    const ticket = {
+      ticket_id: ticketId,
+      resident_name: extractedData.resident_name || extractedData.name || 'Unknown',
+      address: extractedData.address || extractedData.unit_number || 'Unknown',
+      issue_type: extractedData.issue_type || 'General',
+      location: extractedData.location || 'Unknown',
+      description: extractedData.description || extractedData.issue_description || data.summary,
+      priority: extractedData.priority || determinePriority(extractedData.issue_type || 'General'),
       urgency_level: extractedData.urgency_level || 'Normal',
       safety_concern: extractedData.safety_concern || false,
       preferred_contact_method: extractedData.preferred_contact_method || 'Email',
       timestamp: new Date().toISOString(),
       status: 'Pending',
-      source: 'AI Voice Assistant'
+      assigned_technician: null, // Will be assigned by admin
+      source: 'CommunityCare Assistant',
+      call_summary: data.summary,
+      full_conversation: data.fullConversation || null,
+      sentiment: data.sentiment || 'neutral'
     };
     
     // Save to Firebase
-    saveComplaintToFirebase(complaint);
+    saveTicketToFirebase(ticket);
     
-    // Show success message
-    showMessage('Your complaint has been filed successfully!', 'success');
+    // Show success message with ticket ID
+    showMessage(`Ticket #${ticketId} has been created successfully! Priority: ${ticket.priority}`, 'success');
   }
+}
+
+// Determine priority based on issue type
+function determinePriority(issueType) {
+  const issueTypeLower = issueType.toLowerCase();
+  
+  // P1 - Emergency
+  if (issueTypeLower.includes('fire') || issueTypeLower.includes('gas') || 
+      issueTypeLower.includes('power outage') || issueTypeLower.includes('safety')) {
+    return 'P1';
+  }
+  
+  // P2 - Urgent
+  if (issueTypeLower.includes('water leakage') || issueTypeLower.includes('broken lock') || 
+      issueTypeLower.includes('no internet') || issueTypeLower.includes('security')) {
+    return 'P2';
+  }
+  
+  // P3 - Normal maintenance
+  if (issueTypeLower.includes('plumbing') || issueTypeLower.includes('electricity') || 
+      issueTypeLower.includes('ac') || issueTypeLower.includes('fan') || 
+      issueTypeLower.includes('cleaning')) {
+    return 'P3';
+  }
+  
+  // P4 - Minor issues
+  return 'P4';
 }
 
 // Save complaint to Firebase
@@ -415,6 +490,24 @@ async function saveComplaintToFirebase(complaint) {
   } catch (error) {
     console.error('Error saving complaint to Firebase:', error);
     showMessage('Failed to save complaint. Please try again.', 'error');
+  }
+}
+
+// Save ticket to Firebase
+async function saveTicketToFirebase(ticket) {
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      await db.collection('tickets').add({
+        ...ticket,
+        user_id: user.uid,
+        user_email: user.email
+      });
+      console.log('Ticket saved to Firebase:', ticket);
+    }
+  } catch (error) {
+    console.error('Error saving ticket to Firebase:', error);
+    showMessage('Failed to save ticket. Please try again.', 'error');
   }
 }
 
