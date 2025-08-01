@@ -14,11 +14,22 @@ body {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px;
+    text-align: center;
 }
 
 .form h2 {
     margin-bottom: 1.5rem;
     text-align: center;
+}
+
+.container h2 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.container p {
+    margin-bottom: 1.5rem;
+    color: #666;
 }
 
 .input-group {
@@ -35,6 +46,14 @@ body {
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 3px;
+}
+
+.input-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #fff;
 }
 
 button {
