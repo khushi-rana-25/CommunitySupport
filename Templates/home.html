@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Community Support</title>
     <link rel="stylesheet" href="../Styles/style.css">
+    <!-- OmniDimension AI Voice Assistant Widget -->
+    <script id="omnidimension-web-widget" async src="https://backend.omnidim.io/web_widget.js?secret_key=0ea5d7cc5e44c07ada29f4c19f4459ac"></script>
 </head>
 <body class="has-navbar">
     <!-- Message container will be loaded here -->
@@ -13,15 +15,50 @@
     <!-- Navbar will be loaded here -->
     <div id="navbar-container"></div>
 
-    <div class="container">
-        <h2>Welcome to the Home Page!</h2>
+    <div class="container home-container">
+        <h2>Welcome to Community Support</h2>
         <p>You have successfully logged in.</p>
-        <p>Use the navigation bar above to access different features:</p>
-        <ul style="text-align: left; margin: 1rem 0;">
-            <li><strong>Complaint:</strong> Submit new complaints or issues</li>
-            <li><strong>Track:</strong> Track the status of your submitted complaints</li>
-            <li><strong>Feedback:</strong> Provide feedback about services</li>
-        </ul>
+        
+        <div class="ai-assistant-section">
+            <div class="ai-header">
+                <h3>🤖 AI Voice Assistant</h3>
+                <p>Click the microphone button below to start a voice conversation with our AI assistant for filing complaints and service requests.</p>
+            </div>
+            
+            <div class="ai-features">
+                <h4>What you can do:</h4>
+                <ul>
+                    <li>📞 <strong>File Complaints:</strong> Report issues with voice commands</li>
+                    <li>🔧 <strong>Service Requests:</strong> Request maintenance services</li>
+                    <li>📊 <strong>Track Requests:</strong> Check status of your submissions</li>
+                    <li>⭐ <strong>Provide Feedback:</strong> Rate completed services</li>
+                    <li>🚨 <strong>Emergency Issues:</strong> Report urgent safety concerns</li>
+                </ul>
+            </div>
+            
+            <div class="ai-instructions">
+                <h4>How to use:</h4>
+                <ol>
+                    <li>Click the microphone button (bottom-right corner)</li>
+                    <li>Allow microphone access when prompted</li>
+                    <li>Speak clearly about your issue or request</li>
+                    <li>The AI will guide you through the process</li>
+                    <li>Your complaint will be automatically filed</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="quick-actions">
+            <h3>Quick Actions</h3>
+            <div class="action-buttons">
+                <button class="action-btn" onclick="window.location.href='track.html'">
+                    📋 Track My Complaints
+                </button>
+                <button class="action-btn" onclick="window.location.href='feedback.html'">
+                    ⭐ Give Feedback
+                </button>
+            </div>
+        </div>
     </div>
     <script src="../JS/script.js"></script>
 </body>

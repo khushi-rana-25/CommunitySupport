@@ -164,6 +164,11 @@ async function initializeApp() {
     // Set up event listeners based on current page
     setupEventListeners();
     
+    // Initialize AI Assistant if on home page
+    if (window.location.pathname.includes('home.html')) {
+      initializeAIAssistant();
+    }
+    
     // Check authentication state
     const user = await checkAuthState();
     if (user) {
@@ -187,8 +192,8 @@ async function initializeApp() {
 
 // Set up event listeners for different pages
 function setupEventListeners() {
-  const loginForm = document.getElementById('loginForm');
-  const signupForm = document.getElementById('signupForm');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
   const logoutBtn = document.getElementById('logoutBtn');
   
   // Navbar buttons
@@ -196,9 +201,9 @@ function setupEventListeners() {
   const trackBtn = document.getElementById('trackBtn');
   const feedbackBtn = document.getElementById('feedbackBtn');
 
-  if (loginForm) {
+    if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+            e.preventDefault();
       const email = loginForm.loginEmail?.value || loginForm.querySelector('[name="loginEmail"]')?.value;
       const password = loginForm.loginPassword?.value || loginForm.querySelector('[name="loginPassword"]')?.value;
       
@@ -217,17 +222,17 @@ function setupEventListeners() {
         console.error('Login error:', error);
         showMessage(`Login failed: ${error.message}`, 'error');
       }
-    });
-  }
+        });
+    }
 
-  if (signupForm) {
+    if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const username = signupForm.signupUsername.value;
-      const email = signupForm.signupEmail.value;
-      const password = signupForm.signupPassword.value;
-      const role = signupForm.signupRole.value;
+            e.preventDefault();
+            
+            const username = signupForm.signupUsername.value;
+            const email = signupForm.signupEmail.value;
+            const password = signupForm.signupPassword.value;
+            const role = signupForm.signupRole.value;
 
       try {
         await handleSignup(username, email, password, role);
@@ -338,3 +343,90 @@ function setupEventListeners() {
 
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', initializeApp);
+
+// OmniDimension AI Assistant Integration
+function initializeAIAssistant() {
+  // Wait for the OmniDimension widget to load
+  if (typeof window.OmniDimension !== 'undefined') {
+    console.log('OmniDimension AI Assistant loaded successfully');
+    
+    // Configure the AI assistant
+    window.OmniDimension.configure({
+      agentName: "ResiVoice Assistant",
+      welcomeMessage: "Hello, you've reached ResiVoice. How can I assist you with your residential needs today?",
+      onCallStart: function() {
+        console.log('AI Assistant call started');
+        showMessage('AI Assistant is ready to help!', 'info');
+      },
+      onCallEnd: function(data) {
+        console.log('AI Assistant call ended', data);
+        handleAICallEnd(data);
+      },
+      onError: function(error) {
+        console.error('AI Assistant error:', error);
+        showMessage('AI Assistant encountered an error. Please try again.', 'error');
+      }
+    });
+  } else {
+    // Retry after a short delay
+    setTimeout(initializeAIAssistant, 1000);
+  }
+}
+
+// Handle AI call end and process the data
+function handleAICallEnd(data) {
+  if (data && data.summary) {
+    // Extract relevant information from the call
+    const extractedData = data.extracted_variables || {};
+    
+    // Create complaint object
+    const complaint = {
+      resident_name: extractedData.resident_name || 'Unknown',
+      unit_number: extractedData.unit_number || 'Unknown',
+      issue_description: extractedData.issue_description || data.summary,
+      urgency_level: extractedData.urgency_level || 'Normal',
+      safety_concern: extractedData.safety_concern || false,
+      preferred_contact_method: extractedData.preferred_contact_method || 'Email',
+      timestamp: new Date().toISOString(),
+      status: 'Pending',
+      source: 'AI Voice Assistant'
+    };
+    
+    // Save to Firebase
+    saveComplaintToFirebase(complaint);
+    
+    // Show success message
+    showMessage('Your complaint has been filed successfully!', 'success');
+  }
+}
+
+// Save complaint to Firebase
+async function saveComplaintToFirebase(complaint) {
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      await db.collection('complaints').add({
+        ...complaint,
+        user_id: user.uid,
+        user_email: user.email
+      });
+      console.log('Complaint saved to Firebase:', complaint);
+    }
+  } catch (error) {
+    console.error('Error saving complaint to Firebase:', error);
+    showMessage('Failed to save complaint. Please try again.', 'error');
+  }
+}
+
+// Webhook handler for OmniDimension callbacks
+function handleWebhookCallback(data) {
+  console.log('Webhook callback received:', data);
+  
+  // Process the webhook data
+  if (data.summary && data.extracted_variables) {
+    handleAICallEnd(data);
+  }
+}
+
+// Expose webhook handler globally for OmniDimension
+window.handleOmniDimensionWebhook = handleWebhookCallback;
