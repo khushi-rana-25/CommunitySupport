@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to the Home Page!</h2>
+        <p>You have successfully logged in.</p>
+        <button id="logoutBtn">Logout</button>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC-ndD8GLOmNWZdpaHqXLGxdTCHLSO0raE",
+            authDomain: "supportassistant-74986.firebaseapp.com",
+            projectId: "supportassistant-74986",
+            storageBucket: "supportassistant-74986.firebasestorage.app",
+            messagingSenderId: "927348252383",
+            appId: "1:927348252383:web:3f48dfea85a6adfcc5d36a",
+            measurementId: "G-56CMK009MB"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut().then(() => {
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                console.error('Sign out error', error);
+            });
+        });
+    </script>
+</body>
+</html>
