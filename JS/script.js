@@ -350,47 +350,9 @@ function initializeAIAssistant() {
   if (typeof window.OmniDimension !== 'undefined') {
     console.log('OmniDimension AI Assistant loaded successfully');
     
-    // Configure the AI assistant with new CommunityCare Assistant settings
+    // The agent is already configured on the server side
+    // We just need to handle the callbacks
     window.OmniDimension.configure({
-      agentName: "CommunityCare Assistant",
-      welcomeMessage: "Hello, this is CommunityCare Assistant. How can I help you today?",
-      contextBreakdown: [
-        {
-          title: "Listen to the customer's issue and understand it.",
-          body: "Extract the following information from the user's input:\n\nName of the user\n\nAddress (with proper house/flat number)\n\nIssue Type (e.g., plumbing, electricity, cleaning, internet, security)\n\nLocation (e.g., room number or area like kitchen, bathroom, garden)\n\nShort Description (a brief summary of the issue)\n\nIf any of the above details — address, issue type, location, or description — is missing from the user's input, politely ask for that specific information before creating the final ticket.",
-          isEnabled: true
-        },
-        {
-          title: "Assign technician based on priorities.",
-          body: "Assign Priority using the following logic:\n   - Priority P1 – Emergency (fire, gas leak, power outage, safety threat)\n   - Priority P2 – Urgent but not life-threatening (water leakage, broken lock, no internet)\n   - Priority P3 – Normal maintenance (dripping tap, fan not working, AC cooling issue)\n   - Priority P4 – Minor issues or suggestions (dust on lights, general feedback)",
-          isEnabled: true
-        },
-        {
-          title: "Create a ticket with the following fields.",
-          body: "Ensure the ticket includes these details:\n\nAuto-generated Ticket ID\n\nIssue Type (e.g., plumbing, electricity, etc.)\n\nLocation (specific area or room)\n\nDescription (brief summary of the issue)\n\nPriority (P1–P4 based on severity)\n\nTimestamp (date and time of ticket creation)\n\nAssigned Technician (based on specialization and current availability)",
-          isEnabled: true
-        },
-        {
-          title: "Respond to user's queries about the status of the ticket.",
-          body: "When a resident provides a ticket number, respond with the current status of the ticket — such as Assigned, In Progress, or Resolved.\n\nSupport voice queries like:\n\n\"What's the update on ticket 2035?\"\n\nIf the provided ticket number is invalid or not found, respond politely with:\n\n\"Sorry, the ticket number you provided is either incorrect or does not exist. Please check and try again with a valid ticket number.\"",
-          isEnabled: true
-        },
-        {
-          title: "Event Suggestions to Community Managers:",
-          body: "The system suggests community event ideas based on:\n\nPast successful events\n\nFacilities available at the property (e.g., terrace, lounge, garden)\n\nCalendar context (e.g., weekends, festivals, special occasions)\n\nWhen provided with a date, the system checks if a relevant festival or event falls on that day. If so, it recommends engaging group activities that align with the occasion — such as:\n\nFor Teej: Mehendi night, folk dance session, festive fair\n\nFor Independence Day: Flag hoisting, cultural programs, quizzes\n\nFor Raksha Bandhan: Rakhi-making workshop, sibling-themed games\n\nFor Kajari Teej: Bhojpuri music night, women-only gathering\n\nFor Krishna Janmashtami: Dahi Handi, fancy dress, bhajan evening\n\nFor International Friendship Day: Potluck lunch, card-making, movie screening\n\nIf the date has no special occasion, suggest weekend-friendly or seasonal group activities using the available property facilities.",
-          isEnabled: true
-        },
-        {
-          title: "Event Promotion Assistance",
-          body: "Enables the creation and dissemination of event announcements (text or voice-based) across community platforms such as WhatsApp, bulletin boards, and internal apps.",
-          isEnabled: true
-        },
-        {
-          title: "Feedback Collection & Analytics:",
-          body: "Post-event, the assistant collects resident feedback via voice, short surveys, or ratings and generates basic analytics such as attendance count, positive/negative feedback trends, and engagement scores.",
-          isEnabled: true
-        }
-      ],
       onCallStart: function() {
         console.log('CommunityCare Assistant call started');
         showMessage('CommunityCare Assistant is ready to help!', 'info');
