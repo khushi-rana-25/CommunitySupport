@@ -1,89 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home - Community Support</title>
-    <link rel="stylesheet" href="../Styles/style.css">
+    <link rel="stylesheet" href="../Styles/style.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
     <!-- OmniDimension AI Voice Assistant Widget -->
-    <script id="omnidimension-web-widget" async src="https://backend.omnidim.io/web_widget.js?secret_key=0ea5d7cc5e44c07ada29f4c19f4459ac"></script>
-</head>
-<body class="has-navbar">
-    <!-- Message container will be loaded here -->
-    <div id="message-container"></div>
-    
+    <script
+      id="omnidimension-web-widget"
+      async
+      src="https://backend.omnidim.io/web_widget.js?secret_key=0ea5d7cc5e44c07ada29f4c19f4459ac"
+    ></script>
+  </head>
+  <body class="home-body">
+
     <!-- Navbar will be loaded here -->
     <div id="navbar-container"></div>
 
-    <div class="container home-container">
-        <h2>Welcome to Community Support</h2>
-        <p>You have successfully logged in.</p>
-        
-        <div class="ai-assistant-section">
-            <div class="ai-header">
-                <h3>🤖 CommunityCare Assistant</h3>
-                <p>Click the microphone button below to start a voice conversation with our AI assistant for filing tickets, checking status, and getting community support.</p>
-            </div>
-            
-            <div class="ai-features">
-                <h4>What you can do:</h4>
-                <ul>
-                    <li>🎫 <strong>Create Tickets:</strong> Report issues with automatic priority assignment</li>
-                    <li>🔧 <strong>Service Requests:</strong> Request maintenance with detailed information</li>
-                    <li>📊 <strong>Check Status:</strong> Track your ticket status by ticket number</li>
-                    <li>⭐ <strong>Event Suggestions:</strong> Get community event recommendations</li>
-                    <li>🚨 <strong>Emergency Issues:</strong> Report urgent safety concerns (P1 Priority)</li>
-                    <li>📅 <strong>Event Management:</strong> Get help with community events</li>
-                </ul>
-            </div>
-            
-            <div class="ai-instructions">
-                <h4>How to use:</h4>
-                <ol>
-                    <li>Click the microphone button (bottom-right corner)</li>
-                    <li>Allow microphone access when prompted</li>
-                    <li>Speak clearly about your issue or request</li>
-                    <li>The AI will ask for missing details if needed</li>
-                    <li>Your ticket will be automatically created with a unique ID</li>
-                    <li>Save your ticket number for status tracking</li>
-                </ol>
-            </div>
-            
-            <div class="priority-info">
-                <h4>Priority Levels:</h4>
-                <div class="priority-grid">
-                    <div class="priority-item p1">
-                        <span class="priority-label">P1</span>
-                        <span class="priority-desc">Emergency (Fire, Gas, Safety)</span>
-                    </div>
-                    <div class="priority-item p2">
-                        <span class="priority-label">P2</span>
-                        <span class="priority-desc">Urgent (Water, Security)</span>
-                    </div>
-                    <div class="priority-item p3">
-                        <span class="priority-label">P3</span>
-                        <span class="priority-desc">Normal (Plumbing, AC)</span>
-                    </div>
-                    <div class="priority-item p4">
-                        <span class="priority-label">P4</span>
-                        <span class="priority-desc">Minor (Dust, Feedback)</span>
-                    </div>
-                </div>
-            </div>
+    <div class="home-container">
+      <div class="steps-section">
+        <div class="help-message">
+          <h2>
+            "Need Help? Just Tap the assistant widget Icon to Get Started!"
+          </h2>
+          <p>
+            Raise complaints hands-free — it's simple, fast, and hassle-free.
+          </p>
         </div>
-        
-        <div class="quick-actions">
-            <h3>Quick Actions</h3>
-            <div class="action-buttons">
-                <button class="action-btn" onclick="window.location.href='track.html'">
-                    📋 Track My Complaints
-                </button>
-                <button class="action-btn" onclick="window.location.href='feedback.html'">
-                    ⭐ Give Feedback
-                </button>
+        <h2 class="steps-title">How to Get Support</h2>
+        <div class="steps-grid">
+          <!-- Step 1: Report Issue -->
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-card-details">
+              <div class="step-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <h3 class="step-title">Report Issue</h3>
+              <p class="step-description">
+                Describe your problem or concern to our AI assistant
+              </p>
             </div>
+          </div>
+
+          <!-- Step 2: Get Priority -->
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-card-details">
+              <div class="step-icon">
+                <i class="fas fa-flag"></i>
+              </div>
+              <h3 class="step-title">Get Priority</h3>
+              <p class="step-description">
+                AI automatically assigns priority based on issue type
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3: Track Progress -->
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-card-details">
+              <div class="step-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <h3 class="step-title">Track Progress</h3>
+              <p class="step-description">
+                Monitor your ticket status and updates in real-time
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 4: Receive Updates -->
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <div class="step-card-details">
+              <div class="step-icon">
+                <i class="fas fa-bell"></i>
+              </div>
+              <h3 class="step-title">Receive Updates</h3>
+              <p class="step-description">
+                Get notified about resolution progress and completion
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 5: Provide Feedback -->
+          <div class="step-card">
+            <div class="step-number">5</div>
+            <div class="step-card-details">
+              <div class="step-icon">
+                <i class="fas fa-star"></i>
+              </div>
+              <h3 class="step-title">Provide Feedback</h3>
+              <p class="step-description">
+                Rate the service and help us improve our support
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 6: Community Events -->
+          <div class="step-card">
+            <div class="step-number">6</div>
+            <div class="step-card-details">
+              <div class="step-icon">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <h3 class="step-title">Join Events</h3>
+              <p class="step-description">
+                Participate in community events and activities
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
     <script src="../JS/script.js"></script>
-</body>
+  </body>
 </html>
