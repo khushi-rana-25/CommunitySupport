@@ -83,6 +83,19 @@ function checkAuthState() {
   });
 }
 
+// Function to load HTML components
+async function loadComponent(containerId, componentPath) {
+  try {
+    const response = await fetch(componentPath);
+    const html = await response.text();
+    document.getElementById(containerId).innerHTML = html;
+    return true;
+  } catch (error) {
+    console.error(`Error loading component ${componentPath}:`, error);
+    return false;
+  }
+}
+
 // Main initialization function
 async function initializeApp() {
   try {
@@ -91,6 +104,12 @@ async function initializeApp() {
       await loadFirebaseScripts();
     } else {
       initializeFirebase();
+    }
+
+    // Load navbar if navbar container exists
+    const navbarContainer = document.getElementById('navbar-container');
+    if (navbarContainer) {
+      await loadComponent('navbar-container', 'navbar.html');
     }
 
     // Set up event listeners based on current page
@@ -122,6 +141,11 @@ function setupEventListeners() {
   const loginForm = document.getElementById('loginForm');
   const signupForm = document.getElementById('signupForm');
   const logoutBtn = document.getElementById('logoutBtn');
+  
+  // Navbar buttons
+  const complaintBtn = document.getElementById('complaintBtn');
+  const trackBtn = document.getElementById('trackBtn');
+  const feedbackBtn = document.getElementById('feedbackBtn');
 
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
@@ -173,6 +197,85 @@ function setupEventListeners() {
       } catch (error) {
         console.error('Sign out error:', error);
         alert('Logout failed. Please try again.');
+      }
+    });
+  }
+
+  // Navbar functionality
+  if (complaintBtn) {
+    complaintBtn.addEventListener('click', () => {
+      alert('Complaint feature coming soon!');
+      // TODO: Navigate to complaint page or show complaint form
+    });
+  }
+
+  if (trackBtn) {
+    trackBtn.addEventListener('click', () => {
+      window.location.href = 'track.html';
+    });
+  }
+
+  if (feedbackBtn) {
+    feedbackBtn.addEventListener('click', () => {
+      window.location.href = 'feedback.html';
+    });
+  }
+
+  // Track page functionality
+  const searchBtn = document.getElementById('searchBtn');
+  const searchComplaint = document.getElementById('searchComplaint');
+  
+  if (searchBtn && searchComplaint) {
+    searchBtn.addEventListener('click', () => {
+      const searchTerm = searchComplaint.value.trim();
+      if (searchTerm) {
+        // TODO: Implement search functionality
+        alert(`Searching for: ${searchTerm}`);
+      } else {
+        alert('Please enter a search term');
+      }
+    });
+    
+    searchComplaint.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        searchBtn.click();
+      }
+    });
+  }
+
+  // Feedback form functionality
+  const feedbackForm = document.getElementById('feedbackForm');
+  
+  if (feedbackForm) {
+    feedbackForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const feedbackType = feedbackForm.feedbackType.value;
+      const feedbackTitle = feedbackForm.feedbackTitle.value;
+      const feedbackDescription = feedbackForm.feedbackDescription.value;
+      const rating = feedbackForm.rating.value;
+      const feedbackSuggestions = feedbackForm.feedbackSuggestions.value;
+      
+      if (!rating) {
+        alert('Please select a rating');
+        return;
+      }
+      
+      try {
+        // TODO: Save feedback to Firebase
+        console.log('Feedback submitted:', {
+          type: feedbackType,
+          title: feedbackTitle,
+          description: feedbackDescription,
+          rating: rating,
+          suggestions: feedbackSuggestions
+        });
+        
+        alert('Feedback submitted successfully!');
+        feedbackForm.reset();
+      } catch (error) {
+        console.error('Feedback submission error:', error);
+        alert('Failed to submit feedback. Please try again.');
       }
     });
   }

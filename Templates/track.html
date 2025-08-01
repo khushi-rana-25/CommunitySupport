@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Complaints - Community Support</title>
+    <link rel="stylesheet" href="../Styles/style.css">
+</head>
+<body class="has-navbar">
+    <!-- Navbar will be loaded here -->
+    <div id="navbar-container"></div>
+
+    <div class="container">
+        <h2>Track Your Complaints</h2>
+        <p>Monitor the status of your submitted complaints and issues.</p>
+        
+        <div class="tracking-section">
+            <div class="search-box">
+                <input type="text" id="searchComplaint" placeholder="Search by complaint ID or title...">
+                <button id="searchBtn">Search</button>
+            </div>
+            
+            <div class="complaints-list">
+                <h3>Your Recent Complaints</h3>
+                <div id="complaintsContainer">
+                    <!-- Complaints will be loaded here dynamically -->
+                    <div class="complaint-item">
+                        <div class="complaint-header">
+                            <h4>Water Supply Issue</h4>
+                            <span class="status pending">Pending</span>
+                        </div>
+                        <p class="complaint-desc">No water supply in Block A for the past 2 days</p>
+                        <div class="complaint-meta">
+                            <span class="date">Submitted: 2024-01-15</span>
+                            <span class="id">ID: #COMP001</span>
+                        </div>
+                    </div>
+                    
+                    <div class="complaint-item">
+                        <div class="complaint-header">
+                            <h4>Garbage Collection</h4>
+                            <span class="status in-progress">In Progress</span>
+                        </div>
+                        <p class="complaint-desc">Garbage not collected from Block B for 3 days</p>
+                        <div class="complaint-meta">
+                            <span class="date">Submitted: 2024-01-12</span>
+                            <span class="id">ID: #COMP002</span>
+                        </div>
+                    </div>
+                    
+                    <div class="complaint-item">
+                        <div class="complaint-header">
+                            <h4>Street Light Repair</h4>
+                            <span class="status resolved">Resolved</span>
+                        </div>
+                        <p class="complaint-desc">Street light not working near the main gate</p>
+                        <div class="complaint-meta">
+                            <span class="date">Submitted: 2024-01-08</span>
+                            <span class="id">ID: #COMP003</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../JS/script.js"></script>
+</body>
+</html> 
