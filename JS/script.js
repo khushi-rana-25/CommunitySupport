@@ -183,29 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadComplaintCards();
   }
 
-  // Message system setup
-  // const messageContainer = document.createElement("div");
-  // messageContainer.id = "message-container";
-  // messageContainer.innerHTML = `
-  //   <div id="message-box">
-  //     <span id="message-text"></span>
-  //     <button id="message-close">&times;</button>
-  //   </div>
-  // `;
-  // document.body.appendChild(messageContainer);
-
-  // Check for authentication state changes
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      console.log("User is logged in:", user.email);
-      updateNavbarForLoggedInUser(user);
-    } else {
-      console.log("User is logged out");
-      updateNavbarForLoggedOutUser();
-    }
-  });
-});
-
   // Initialize AI Assistant if on home page
   if (window.location.pathname.includes('home.html')) {
     initializeAIAssistant();
@@ -228,6 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+});
 
 // Authentication functions
 function handleSignup(username, email, password, role) {
