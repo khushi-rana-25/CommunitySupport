@@ -20,6 +20,52 @@ const firebaseSDKUrls = [
 // Global Firebase variables
 let app, analytics, auth, db;
 
+// Message system
+function showMessage(message, type = 'info', duration = 5000) {
+  const container = document.getElementById('message-container');
+  const messageBox = document.getElementById('message-box');
+  const messageText = document.getElementById('message-text');
+  const closeBtn = document.getElementById('message-close');
+
+  if (!container || !messageBox || !messageText) {
+    // Fallback to alert if message system not loaded
+    alert(message);
+    return;
+  }
+
+  // Set message content
+  messageText.textContent = message;
+  
+  // Set message type
+  messageBox.className = `message-box ${type}`;
+  
+  // Show message
+  container.style.display = 'block';
+  container.classList.remove('hide');
+  
+  // Auto hide after duration
+  const autoHide = setTimeout(() => {
+    hideMessage();
+  }, duration);
+  
+  // Close button functionality
+  closeBtn.onclick = () => {
+    clearTimeout(autoHide);
+    hideMessage();
+  };
+}
+
+function hideMessage() {
+  const container = document.getElementById('message-container');
+  if (container) {
+    container.classList.add('hide');
+    setTimeout(() => {
+      container.style.display = 'none';
+      container.classList.remove('hide');
+    }, 300);
+  }
+}
+
 // Function to load Firebase scripts dynamically
 function loadFirebaseScripts() {
   return new Promise((resolve, reject) => {
@@ -106,6 +152,9 @@ async function initializeApp() {
       initializeFirebase();
     }
 
+    // Load message component
+    await loadComponent('message-container', 'message.html');
+
     // Load navbar if navbar container exists
     const navbarContainer = document.getElementById('navbar-container');
     if (navbarContainer) {
@@ -154,17 +203,19 @@ function setupEventListeners() {
       const password = loginForm.loginPassword?.value || loginForm.querySelector('[name="loginPassword"]')?.value;
       
       if (!email || !password) {
-        alert('Please enter both email and password');
+        showMessage('Please enter both email and password', 'warning');
         return;
       }
 
       try {
         await handleLogin(email, password);
-        alert('Login successful!');
-        window.location.href = 'home.html';
+        showMessage('Login successful!', 'success');
+        setTimeout(() => {
+          window.location.href = 'home.html';
+        }, 1000);
       } catch (error) {
         console.error('Login error:', error);
-        alert(`Login failed: ${error.message}`);
+        showMessage(`Login failed: ${error.message}`, 'error');
       }
     });
   }
@@ -180,11 +231,13 @@ function setupEventListeners() {
 
       try {
         await handleSignup(username, email, password, role);
-        alert('Sign up successful! Please log in.');
-        window.location.href = 'index.html';
+        showMessage('Sign up successful! Please log in.', 'success');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 2000);
       } catch (error) {
         console.error('Signup error:', error);
-        alert(`Sign up failed: ${error.message}`);
+        showMessage(`Sign up failed: ${error.message}`, 'error');
       }
     });
   }
@@ -193,10 +246,13 @@ function setupEventListeners() {
     logoutBtn.addEventListener('click', async () => {
       try {
         await handleLogout();
-        window.location.href = 'index.html';
+        showMessage('Logged out successfully', 'info');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1000);
       } catch (error) {
         console.error('Sign out error:', error);
-        alert('Logout failed. Please try again.');
+        showMessage('Logout failed. Please try again.', 'error');
       }
     });
   }
@@ -204,8 +260,7 @@ function setupEventListeners() {
   // Navbar functionality
   if (complaintBtn) {
     complaintBtn.addEventListener('click', () => {
-      alert('Complaint feature coming soon!');
-      // TODO: Navigate to complaint page or show complaint form
+      window.location.href = 'home.html';
     });
   }
 
@@ -230,9 +285,9 @@ function setupEventListeners() {
       const searchTerm = searchComplaint.value.trim();
       if (searchTerm) {
         // TODO: Implement search functionality
-        alert(`Searching for: ${searchTerm}`);
+        showMessage(`Searching for: ${searchTerm}`, 'info');
       } else {
-        alert('Please enter a search term');
+        showMessage('Please enter a search term', 'warning');
       }
     });
     
@@ -257,7 +312,7 @@ function setupEventListeners() {
       const feedbackSuggestions = feedbackForm.feedbackSuggestions.value;
       
       if (!rating) {
-        alert('Please select a rating');
+        showMessage('Please select a rating', 'warning');
         return;
       }
       
@@ -271,11 +326,11 @@ function setupEventListeners() {
           suggestions: feedbackSuggestions
         });
         
-        alert('Feedback submitted successfully!');
+        showMessage('Feedback submitted successfully!', 'success');
         feedbackForm.reset();
       } catch (error) {
         console.error('Feedback submission error:', error);
-        alert('Failed to submit feedback. Please try again.');
+        showMessage('Failed to submit feedback. Please try again.', 'error');
       }
     });
   }

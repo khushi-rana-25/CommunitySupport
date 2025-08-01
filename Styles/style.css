@@ -353,3 +353,123 @@ a:hover {
     width: 100%;
     max-width: 800px;
 }
+
+/* Message System Styles */
+.message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: none;
+}
+
+.message-box {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 1rem;
+    min-width: 300px;
+    max-width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    animation: slideIn 0.3s ease-out;
+    border-left: 4px solid #007bff;
+}
+
+.message-box.success {
+    border-left-color: #28a745;
+}
+
+.message-box.error {
+    border-left-color: #dc3545;
+}
+
+.message-box.warning {
+    border-left-color: #ffc107;
+}
+
+.message-box.info {
+    border-left-color: #17a2b8;
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.message-icon {
+    font-size: 1.25rem;
+    width: 20px;
+    text-align: center;
+}
+
+.message-box.success .message-icon::before {
+    content: "✓";
+    color: #28a745;
+}
+
+.message-box.error .message-icon::before {
+    content: "✕";
+    color: #dc3545;
+}
+
+.message-box.warning .message-icon::before {
+    content: "⚠";
+    color: #ffc107;
+}
+
+.message-box.info .message-icon::before {
+    content: "ℹ";
+    color: #17a2b8;
+}
+
+.message-text {
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.message-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 1rem;
+    width: auto;
+    transition: color 0.3s ease;
+}
+
+.message-close:hover {
+    color: #333;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.message-container.hide {
+    animation: slideOut 0.3s ease-in forwards;
+}
