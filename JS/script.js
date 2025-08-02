@@ -28,27 +28,19 @@ function showMessage(message, type = 'info', duration = 5000) {
   const closeBtn = document.getElementById('message-close');
 
   if (!container || !messageBox || !messageText) {
-    // Fallback to alert if message system not loaded
     alert(message);
     return;
   }
 
-  // Set message content
   messageText.textContent = message;
-  
-  // Set message type
   messageBox.className = `message-box ${type}`;
-  
-  // Show message
   container.style.display = 'block';
   container.classList.remove('hide');
-  
-  // Auto hide after duration
+
   const autoHide = setTimeout(() => {
     hideMessage();
   }, duration);
-  
-  // Close button functionality
+
   closeBtn.onclick = () => {
     clearTimeout(autoHide);
     hideMessage();
@@ -66,7 +58,6 @@ function hideMessage() {
   }
 }
 
-// Function to load Firebase scripts dynamically
 function loadFirebaseScripts() {
   return new Promise((resolve, reject) => {
     let loadedScripts = 0;
@@ -78,20 +69,16 @@ function loadFirebaseScripts() {
       script.onload = () => {
         loadedScripts++;
         if (loadedScripts === totalScripts) {
-          // All scripts loaded, initialize Firebase
           initializeFirebase();
           resolve();
         }
       };
-      script.onerror = () => {
-        reject(new Error(`Failed to load Firebase script: ${url}`));
-      };
+      script.onerror = () => reject(new Error(`Failed to load Firebase script: ${url}`));
       document.head.appendChild(script);
     });
   });
 }
 
-// Initialize Firebase after scripts are loaded
 function initializeFirebase() {
   app = firebase.initializeApp(firebaseConfig);
   analytics = firebase.analytics();
@@ -99,16 +86,11 @@ function initializeFirebase() {
   db = firebase.firestore();
 }
 
-// Function to load complaint cards
 function loadComplaintCards() {
   const complaintsList = document.querySelector(".complaints-list");
-  if (!complaintsList) {
-    return;
-  }
+  if (!complaintsList) return;
 
   const cardUrl = "../Templates/complaint-card.html";
-
-  // Data for the cards
   const complaints = [
     {
       ticketId: "#TKT-001",
@@ -141,16 +123,16 @@ function loadComplaintCards() {
       const cardTemplate = doc.querySelector(".complaint-card");
 
       if (cardTemplate) {
-        complaintsList.innerHTML = ""; // Clear existing content
+        complaintsList.innerHTML = "";
         complaints.forEach((complaint) => {
           const newCard = cardTemplate.cloneNode(true);
           newCard.querySelector(".ticket-id").textContent = complaint.ticketId;
           const statusEl = newCard.querySelector(".status");
           statusEl.className = `status ${complaint.status}`;
           statusEl.textContent = complaint.status.replace("-", " ");
-          newCard.querySelector(
-            ".card-body"
-          ).innerHTML = `<p><strong>Issue:</strong> ${complaint.issue}</p><p><strong>Location:</strong> ${complaint.location}</p>`;
+          newCard.querySelector(".card-body").innerHTML = `
+            <p><strong>Issue:</strong> ${complaint.issue}</p>
+            <p><strong>Location:</strong> ${complaint.location}</p>`;
           newCard.querySelector(".date").textContent = complaint.date;
           complaintsList.appendChild(newCard);
         });
@@ -158,67 +140,12 @@ function loadComplaintCards() {
     });
 }
 
-// Load external HTML content (like navbar)
-document.addEventListener("DOMContentLoaded", () => {
-  // Load Firebase scripts if not already loaded
-  if (typeof firebase === 'undefined') {
-    loadFirebaseScripts();
-  } else {
-    initializeFirebase();
-  }
-
-  // Load message component
-  loadComponent('message-container', 'message.html');
-
-  // Load navbar if navbar container exists
-  const navbarContainer = document.getElementById('navbar-container');
-  if (navbarContainer) {
-    loadComponent('navbar-container', 'navbar.html').then(() => {
-      // Add other navbar related initializations here
-    });
-  }
-
-  // Load complaint cards on track page
-  if (window.location.pathname.endsWith("track.html")) {
-    loadComplaintCards();
-  }
-
-  // Initialize AI Assistant if on home page
-  if (window.location.pathname.includes('home.html')) {
-    initializeAIAssistant();
-  }
-
-  // Check authentication state
-  checkAuthState().then((user) => {
-    if (user) {
-      console.log('User is signed in:', user.email);
-      // Redirect to home if on login/signup page
-      if (window.location.pathname.includes('index.html') || 
-          window.location.pathname.includes('signup.html')) {
-        window.location.href = 'home.html';
-      }
-    } else {
-      console.log('User is signed out');
-      // Redirect to login if on home page
-      if (window.location.pathname.includes('home.html')) {
-        window.location.href = 'index.html';
-      }
-    }
-  });
-});
-
-// Authentication functions
 function handleSignup(fullName, username, email, password, role, address, phoneNumber) {
   return auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       const user = userCredential.user;
       return db.collection('users').doc(user.uid).set({
-        fullName: fullName,
-        username: username,
-        email: email,
-        role: role,
-        address: address,
-        phoneNumber: phoneNumber
+        fullName, username, email, role, address, phoneNumber
       });
     });
 }
@@ -231,41 +158,34 @@ function handleLogout() {
   return auth.signOut();
 }
 
-// Check if user is authenticated
 function checkAuthState() {
   return new Promise((resolve) => {
-    auth.onAuthStateChanged((user) => {
-      resolve(user);
-    });
+    auth.onAuthStateChanged((user) => resolve(user));
   });
 }
 
-// Function to load user profile data
 async function loadUserProfileData() {
-    try {
-        const user = await checkAuthState();
-        if (user) {
-            const userDoc = await db.collection('users').doc(user.uid).get();
-            if (userDoc.exists) {
-                const userData = userDoc.data();
-                // Populate profile page elements
-                document.getElementById('fullName').textContent = userData.fullName || 'Not provided';
-                document.getElementById('username').textContent = userData.username || 'Not provided';
-                document.getElementById('userEmail').textContent = userData.email || 'Not provided';
-                document.getElementById('userPhone').textContent = userData.phoneNumber || 'Not provided';
-                document.getElementById('userAddress').textContent = userData.address || 'Not provided';
-            } else {
-                console.log('No such user document!');
-                showMessage('Could not find user profile data.', 'error');
-            }
-        }
-    } catch (error) {
-        console.error('Error loading user profile data:', error);
-        showMessage('Failed to load profile data.', 'error');
+  try {
+    const user = await checkAuthState();
+    if (user) {
+      const userDoc = await db.collection('users').doc(user.uid).get();
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        document.getElementById('fullName').textContent = userData.fullName || 'Not provided';
+        document.getElementById('username').textContent = userData.username || 'Not provided';
+        document.getElementById('userEmail').textContent = userData.email || 'Not provided';
+        document.getElementById('userPhone').textContent = userData.phoneNumber || 'Not provided';
+        document.getElementById('userAddress').textContent = userData.address || 'Not provided';
+      } else {
+        showMessage('Could not find user profile data.', 'error');
+      }
     }
+  } catch (error) {
+    console.error('Error loading user profile data:', error);
+    showMessage('Failed to load profile data.', 'error');
+  }
 }
 
-// Function to load HTML components
 async function loadComponent(containerId, componentPath) {
   try {
     const response = await fetch(componentPath);
@@ -278,50 +198,43 @@ async function loadComponent(containerId, componentPath) {
   }
 }
 
-// Main initialization function
 async function initializeApp() {
   try {
-    // Load Firebase scripts if not already loaded
     if (typeof firebase === 'undefined') {
       await loadFirebaseScripts();
     } else {
       initializeFirebase();
     }
 
-    // Load message component
     await loadComponent('message-container', 'message.html');
 
-    // Load navbar if navbar container exists
     const navbarContainer = document.getElementById('navbar-container');
     if (navbarContainer) {
       await loadComponent('navbar-container', 'navbar.html');
     }
 
-    // Set up event listeners based on current page
     setupEventListeners();
-    
-    // Load user profile data if on profile page
+
     if (window.location.pathname.includes('profile.html')) {
-        await loadUserProfileData();
+      await loadUserProfileData();
     }
-    
-    // Initialize AI Assistant if on home page
+
     if (window.location.pathname.includes('home.html')) {
-      initializeAIAssistant();
+      initializeAIAssistant?.(); // Optional chaining in case it's not defined
     }
-    
-    // Check authentication state
+
+    if (window.location.pathname.endsWith("track.html")) {
+      loadComplaintCards();
+    }
+
     const user = await checkAuthState();
     if (user) {
       console.log('User is signed in:', user.email);
-      // Redirect to home if on login/signup page
-      if (window.location.pathname.includes('index.html') || 
-          window.location.pathname.includes('signup.html')) {
+      if (window.location.pathname.includes('index.html') || window.location.pathname.includes('signup.html')) {
         window.location.href = 'home.html';
       }
     } else {
       console.log('User is signed out');
-      // Redirect to login if on home page
       if (window.location.pathname.includes('home.html')) {
         window.location.href = 'index.html';
       }
@@ -331,62 +244,49 @@ async function initializeApp() {
   }
 }
 
-// Set up event listeners for different pages
 function setupEventListeners() {
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
+  const loginForm = document.getElementById('loginForm');
+  const signupForm = document.getElementById('signupForm');
   const logoutBtn = document.getElementById('logoutBtn');
-  
-  // Navbar buttons
   const complaintBtn = document.getElementById('complaintBtn');
   const trackBtn = document.getElementById('trackBtn');
   const feedbackBtn = document.getElementById('feedbackBtn');
 
-    if (loginForm) {
+  if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+      e.preventDefault();
       const email = loginForm.loginEmail?.value || loginForm.querySelector('[name="loginEmail"]')?.value;
       const password = loginForm.loginPassword?.value || loginForm.querySelector('[name="loginPassword"]')?.value;
-      
       if (!email || !password) {
         showMessage('Please enter both email and password', 'warning');
         return;
       }
-
       try {
         await handleLogin(email, password);
         showMessage('Login successful!', 'success');
-        setTimeout(() => {
-          window.location.href = 'home.html';
-        }, 1000);
+        setTimeout(() => window.location.href = 'home.html', 1000);
       } catch (error) {
-        console.error('Login error:', error);
         showMessage(`Login failed: ${error.message}`, 'error');
       }
-        });
-    }
+    });
+  }
 
-    if (signupForm) {
+  if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const fullName = signupForm.fullName.value;
-            const username = signupForm.signupUsername.value;
-            const email = signupForm.signupEmail.value;
-            const password = signupForm.signupPassword.value;
-            const role = signupForm.signupRole.value;
-            const address = signupForm.address.value;
-            const phoneNumber = signupForm.phoneNumber.value;
-
+      e.preventDefault();
+      const fullName = signupForm.fullName.value;
+      const username = signupForm.signupUsername.value;
+      const email = signupForm.signupEmail.value;
+      const password = signupForm.signupPassword.value;
+      const role = signupForm.signupRole.value;
+      const address = signupForm.address.value;
+      const phoneNumber = signupForm.phoneNumber.value;
       try {
         await handleSignup(fullName, username, email, password, role, address, phoneNumber);
-        await handleLogout(); // Sign out to prevent auto-login
+        await handleLogout();
         showMessage('Sign up successful! Please log in.', 'success');
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1500); // Redirect to login page
+        setTimeout(() => window.location.href = 'index.html', 1500);
       } catch (error) {
-        console.error('Signup error:', error);
         showMessage(`Sign up failed: ${error.message}`, 'error');
       }
     });
@@ -397,77 +297,58 @@ function setupEventListeners() {
       try {
         await handleLogout();
         showMessage('Logged out successfully', 'info');
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1000);
+        setTimeout(() => window.location.href = 'index.html', 1000);
       } catch (error) {
-        console.error('Sign out error:', error);
         showMessage('Logout failed. Please try again.', 'error');
       }
     });
   }
 
-  // Navbar functionality
   if (complaintBtn) {
-    complaintBtn.addEventListener('click', () => {
-      window.location.href = 'home.html';
-    });
+    complaintBtn.addEventListener('click', () => window.location.href = 'home.html');
   }
 
   if (trackBtn) {
-    trackBtn.addEventListener('click', () => {
-      window.location.href = 'track.html';
-    });
+    trackBtn.addEventListener('click', () => window.location.href = 'track.html');
   }
 
   if (feedbackBtn) {
-    feedbackBtn.addEventListener('click', () => {
-      window.location.href = 'feedback.html';
-    });
+    feedbackBtn.addEventListener('click', () => window.location.href = 'feedback.html');
   }
 
-  // Track page functionality
   const searchBtn = document.getElementById('searchBtn');
   const searchComplaint = document.getElementById('searchComplaint');
-  
+
   if (searchBtn && searchComplaint) {
     searchBtn.addEventListener('click', () => {
       const searchTerm = searchComplaint.value.trim();
       if (searchTerm) {
-        // TODO: Implement search functionality
         showMessage(`Searching for: ${searchTerm}`, 'info');
       } else {
         showMessage('Please enter a search term', 'warning');
       }
     });
-    
     searchComplaint.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        searchBtn.click();
-      }
+      if (e.key === 'Enter') searchBtn.click();
     });
   }
 
-  // Feedback form functionality
   const feedbackForm = document.getElementById('feedbackForm');
-  
   if (feedbackForm) {
     feedbackForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
       const feedbackType = feedbackForm.feedbackType.value;
       const feedbackTitle = feedbackForm.feedbackTitle.value;
       const feedbackDescription = feedbackForm.feedbackDescription.value;
       const rating = feedbackForm.rating.value;
       const feedbackSuggestions = feedbackForm.feedbackSuggestions.value;
-      
+
       if (!rating) {
         showMessage('Please select a rating', 'warning');
         return;
       }
-      
+
       try {
-        // TODO: Save feedback to Firebase
         console.log('Feedback submitted:', {
           type: feedbackType,
           title: feedbackTitle,
@@ -475,16 +356,15 @@ function setupEventListeners() {
           rating: rating,
           suggestions: feedbackSuggestions
         });
-        
+
         showMessage('Feedback submitted successfully!', 'success');
         feedbackForm.reset();
       } catch (error) {
-        console.error('Feedback submission error:', error);
         showMessage('Failed to submit feedback. Please try again.', 'error');
       }
     });
   }
 }
 
-// Initialize the app when DOM is loaded
+// ✅ Final single DOMContentLoaded entry point
 document.addEventListener('DOMContentLoaded', initializeApp);
