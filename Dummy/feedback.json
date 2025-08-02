@@ -1,0 +1,32 @@
+{
+  "SentimentRatings": [
+    {
+      "category": "Extremely happy",
+      "count": 12
+    },
+    {
+      "category": "Satisfied",
+      "count": 18
+    },
+    {
+      "category": "Partially satisfied",
+      "count": 9
+    },
+    {
+      "category": "Neutral",
+      "count": 5
+    },
+    {
+      "category": "Somewhat dissatisfied",
+      "count": 4
+    },
+    {
+      "category": "Dissatisfied",
+      "count": 2
+    },
+    {
+      "category": "Extremely disappointed",
+      "count": 1
+    }
+  ]
+}
