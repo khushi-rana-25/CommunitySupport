@@ -1537,11 +1537,11 @@ a:hover {
   font-size: 3rem;
   font-weight: 700;
   margin: 0 0 1rem 0;
-  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+  text-shadow: 0 0 20px rgb(0, 213, 255);
 }
 
 .home-subtitle {
-  color: #00d4ff;
+  color: #00d5ff;
   font-size: 1.2rem;
   font-weight: 300;
   margin: 0;
@@ -1572,10 +1572,10 @@ a:hover {
 .help-message h2 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #02d5ff;
+  color: #02d5ffe3;
   margin-bottom: 1rem;
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
-  animation: glowPulse 2s ease-in-out infinite alternate;
+  animation:  2s ease-in-out infinite alternate;
 }
 
 .help-message p {
