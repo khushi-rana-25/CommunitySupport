@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Community Support</title>
+    <link rel="stylesheet" href="../Styles/profile.css">
+    <link rel="stylesheet" href="../Styles/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="profile-body">
+    
+    <!-- Navbar will be loaded here -->
+    <div id="navbar-container"></div>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar-section">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-sections">
+            <div class="profile-section">
+                <h2>Personal Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Username</label>
+                        <p id="username">Loading...</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Email</label>
+                        <p id="userEmail">Loading...</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Phone Number</label>
+                        <p id="userPhone">Not provided</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Street Address</label>
+                        <p id="userAddress">Not provided</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-logout-section">
+                <button class="logout-btn-profile" id="logoutBtnProfile">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../JS/script.js"></script>
+    <script src="../JS/profile.js"></script>
+</body>
+</html> 
