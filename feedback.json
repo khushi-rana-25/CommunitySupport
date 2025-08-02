@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "user": "Rohan",
+        "feedback": "The electrician arrived on time and fixed the issue quickly. Great service!",
+        "rating": 5
+    },
+    {
+        "id": 2,
+        "user": "Priya",
+        "feedback": "The plumber was very professional and explained the problem clearly.",
+        "rating": 4
+    },
+    {
+        "id": 3,
+        "user": "Amit",
+        "feedback": "The community event was well-organized. Enjoyed it a lot!",
+        "rating": 5
+    },
+    {
+        "id": 4,
+        "user": "Sneha",
+        "feedback": "The response to my complaint was a bit slow, but the issue was resolved.",
+        "rating": 3
+    }
+]
