@@ -1,4 +1,4 @@
-// Firebase Configuration
+//by updating your code in this // Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyC-ndD8GLOmNWZdpaHqXLGxdTCHLSO0raE",
   authDomain: "supportassistant-74986.firebaseapp.com",
