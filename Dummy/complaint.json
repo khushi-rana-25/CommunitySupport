@@ -1,0 +1,24 @@
+{
+  "tickets": [
+    {
+      "type": "Water Leakage",
+      "description": "There's water leaking continuously from the pipe near the building entrance since yesterday."
+    },
+    {
+      "type": "Electricity",
+      "description": "The lights in Block B's parking area are not working during the night."
+    },
+    {
+      "type": "Security",
+      "description": "A few unknown people have been entering the society without gate pass or verification."
+    },
+    {
+      "type": "Garbage",
+      "description": "Garbage has not been picked up from the C1 tower for the past 3 days, causing foul smell."
+    },
+    {
+      "type": "Noise",
+      "description": "Loud construction work is happening past 10 PM in Block D, disturbing residents."
+    }
+  ]
+}
