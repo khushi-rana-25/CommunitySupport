@@ -1,0 +1,42 @@
+[
+  {
+    "eventName": "Clean-Up Drive at Riverside",
+    "eventType": "Environmental",
+    "location": "Sector 21 Riverside Park, New Delhi",
+    "date": "2025-08-10",
+    "time": "09:00 AM",
+    "description": "Join us in making our riverside cleaner and greener. Open to all volunteers. Gloves and tools will be provided."
+  },
+  {
+    "eventName": "Free Health Check-Up Camp",
+    "eventType": "Healthcare",
+    "location": "Community Hall, Block C, Rohini",
+    "date": "2025-08-14",
+    "time": "10:00 AM",
+    "description": "General health screening including blood pressure, sugar levels, and BMI. Doctors from leading hospitals will be present."
+  },
+  {
+    "eventName": "Workshop on Digital Safety for Women",
+    "eventType": "Awareness",
+    "location": "Women’s Resource Centre, Pitampura",
+    "date": "2025-08-17",
+    "time": "04:00 PM",
+    "description": "Interactive session to educate women about online safety, privacy, and cybercrime reporting. Open to all ages."
+  },
+  {
+    "eventName": "Senior Citizens' Yoga Morning",
+    "eventType": "Wellness",
+    "location": "Green Valley Park, Janakpuri",
+    "date": "2025-08-12",
+    "time": "06:30 AM",
+    "description": "Free yoga and breathing exercises guided by certified instructors. Bring your yoga mat!"
+  },
+  {
+    "eventName": "Art & Craft Exhibition by Local Talent",
+    "eventType": "Cultural",
+    "location": "GLBITM Auditorium, Greater Noida",
+    "date": "2025-08-20",
+    "time": "11:00 AM",
+    "description": "Come support local artists and enjoy beautiful crafts, paintings, and handmade products."
+  }
+]
