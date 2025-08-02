@@ -380,10 +380,11 @@ function setupEventListeners() {
 
       try {
         await handleSignup(fullName, username, email, password, role, address, phoneNumber);
+        await handleLogout(); // Sign out to prevent auto-login
         showMessage('Sign up successful! Please log in.', 'success');
         setTimeout(() => {
           window.location.href = 'index.html';
-        }, 2000);
+        }, 1500); // Redirect to login page
       } catch (error) {
         console.error('Signup error:', error);
         showMessage(`Sign up failed: ${error.message}`, 'error');
