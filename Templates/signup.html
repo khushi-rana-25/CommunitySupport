@@ -60,7 +60,7 @@
                         <label for="signupPassword">Password</label>
                         <div class="password-input-container">
                             <input type="password" id="signupPassword" name="signupPassword" required>
-                            <i class="fas fa-eye-slash password-toggle" id="passwordToggle"></i>
+                            <i class="fas fa-eye-slash password-toggle" id="passwordToggle" style="cursor:pointer;"></i>
                         </div>
                     </div>
                     
@@ -103,4 +103,22 @@
         </div>
     </div>
     
+    <script>
+        // Show/Hide password functionality for signup page
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('signupPassword');
+            const toggleIcon = document.getElementById('passwordToggle');
+            toggleIcon.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                }
+            });
+        });
+    </script>
     <script src="../JS/script.js"></script>
