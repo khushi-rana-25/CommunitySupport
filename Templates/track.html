@@ -26,6 +26,217 @@
       <!-- Complaint cards will be loaded here dynamically -->
     </div>
   </div>
+  
   <script src="../JS/script.js"></script>
+  <script>
+    // Sample complaint data for demonstration
+    const complaintsData = [
+      {
+        id: "TCK001",
+        title: "Street Light Not Working",
+        description: "The street light on Main Street has been out for 3 days",
+        location: "Main Street, Block A",
+        date: "2025-07-28",
+        status: "In Progress",
+        priority: "Medium"
+      },
+      {
+        id: "TCK002",
+        title: "Water Leakage",
+        description: "Continuous water leakage from pipe near park",
+        location: "Central Park Area",
+        date: "2025-07-30",
+        status: "Pending",
+        priority: "High"
+      },
+      {
+        id: "TCK003",
+        title: "Garbage Collection Issue",
+        description: "Garbage not collected for past week",
+        location: "Residential Block B",
+        date: "2025-08-01",
+        status: "Resolved",
+        priority: "Low"
+      },
+      {
+        id: "TCK004",
+        title: "Road Pothole",
+        description: "Large pothole causing traffic issues",
+        location: "Highway Junction",
+        date: "2025-08-02",
+        status: "New",
+        priority: "High"
+      },
+      {
+        id: "TCK005",
+        title: "Noise Complaint",
+        description: "Excessive noise from construction site",
+        location: "Downtown Area",
+        date: "2025-07-25",
+        status: "In Progress",
+        priority: "Medium"
+      }
+    ];
+
+    // Function to create complaint card HTML
+    function createComplaintCard(complaint) {
+      const statusClass = complaint.status.toLowerCase().replace(' ', '-');
+      const priorityClass = complaint.priority.toLowerCase();
+      
+      return `
+        <div class="complaint-card" data-ticket="${complaint.id}" data-date="${complaint.date}">
+          <div class="complaint-header">
+            <div class="ticket-info">
+              <span class="ticket-id">${complaint.id}</span>
+              <span class="complaint-date">${formatDate(complaint.date)}</span>
+            </div>
+            <div class="status-badge ${statusClass}">${complaint.status}</div>
+          </div>
+          <div class="complaint-content">
+            <h3 class="complaint-title">${complaint.title}</h3>
+            <p class="complaint-description">${complaint.description}</p>
+            <div class="complaint-details">
+              <div class="location">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>${complaint.location}</span>
+              </div>
+              <div class="priority priority-${priorityClass}">
+                <i class="fas fa-flag"></i>
+                <span>${complaint.priority} Priority</span>
+              </div>
+            </div>
+          </div>
+          <div class="complaint-actions">
+            <button class="btn-view" onclick="viewComplaint('${complaint.id}')">
+              <i class="fas fa-eye"></i> View Details
+            </button>
+            <button class="btn-update" onclick="updateComplaint('${complaint.id}')">
+              <i class="fas fa-edit"></i> Update
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Function to format date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    // Function to display complaints
+    function displayComplaints(complaints) {
+      const complaintsContainer = document.querySelector('.complaints-list');
+      if (complaints.length === 0) {
+        complaintsContainer.innerHTML = `
+          <div class="no-results">
+            <i class="fas fa-search"></i>
+            <h3>No complaints found</h3>
+            <p>Try adjusting your search criteria</p>
+          </div>
+        `;
+        return;
+      }
+      
+      complaintsContainer.innerHTML = complaints.map(createComplaintCard).join('');
+    }
+
+    // Function to filter complaints based on search query
+    function filterComplaints(query) {
+      if (!query.trim()) {
+        return complaintsData;
+      }
+
+      const searchTerm = query.toLowerCase().trim();
+      
+      // Separate complaints that match ticket ID or date (exact matches first)
+      const exactMatches = [];
+      const otherMatches = [];
+
+      complaintsData.forEach(complaint => {
+        const ticketMatch = complaint.id.toLowerCase().includes(searchTerm);
+        const dateMatch = complaint.date.includes(searchTerm) || 
+                         formatDate(complaint.date).toLowerCase().includes(searchTerm);
+        
+        if (ticketMatch || dateMatch) {
+          exactMatches.push(complaint);
+        } else {
+          // Check other fields for partial matches
+          const titleMatch = complaint.title.toLowerCase().includes(searchTerm);
+          const locationMatch = complaint.location.toLowerCase().includes(searchTerm);
+          const descriptionMatch = complaint.description.toLowerCase().includes(searchTerm);
+          
+          if (titleMatch || locationMatch || descriptionMatch) {
+            otherMatches.push(complaint);
+          }
+        }
+      });
+
+      // Return exact matches first, then other matches
+      return [...exactMatches, ...otherMatches];
+    }
+
+    // Search functionality
+    function setupSearch() {
+      const searchInput = document.getElementById('searchComplaint');
+      const searchBtn = document.getElementById('searchBtn');
+
+      function performSearch() {
+        const query = searchInput.value;
+        const filteredComplaints = filterComplaints(query);
+        displayComplaints(filteredComplaints);
+        
+        // Add visual feedback for search
+        if (query.trim()) {
+          document.querySelector('.track-header').classList.add('searching');
+        } else {
+          document.querySelector('.track-header').classList.remove('searching');
+        }
+      }
+
+      // Search on button click
+      searchBtn.addEventListener('click', performSearch);
+
+      // Search on Enter key press
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          performSearch();
+        }
+      });
+
+      // Real-time search (optional - searches as you type)
+      searchInput.addEventListener('input', function() {
+        // Debounce the search to avoid too many calls
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(performSearch, 300);
+      });
+    }
+
+    // Placeholder functions for complaint actions
+    function viewComplaint(ticketId) {
+      alert(`Viewing details for ticket: ${ticketId}`);
+      // You can implement a modal or redirect to detailed view
+    }
+
+    function updateComplaint(ticketId) {
+      alert(`Updating complaint: ${ticketId}`);
+      // You can implement update functionality
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Display all complaints initially
+      displayComplaints(complaintsData);
+      
+      // Setup search functionality
+      setupSearch();
+      
+      console.log('Track page initialized with', complaintsData.length, 'complaints');
+    });
+  </script>
 </body>
 </html>

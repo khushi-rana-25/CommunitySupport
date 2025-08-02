@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - Community Support</title>
-    <link rel="stylesheet" href="../Styles/profile.css">
-    <link rel="stylesheet" href="../Styles/style.css">
+    <title>Notification Popup</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
     <style>
         /* Notification Popup Styles */
         .notification-overlay {
@@ -51,6 +48,7 @@
             transform: scale(1) translateY(0);
         }
 
+        /* Animated background effect */
         .notification-popup::before {
             content: '';
             position: absolute;
@@ -161,55 +159,150 @@
             transform: translateY(-2px);
             box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
         }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .notification-popup {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .notification-actions {
+                flex-direction: column;
+            }
+
+            .notification-btn {
+                width: 100%;
+            }
+
+            .notification-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .notification-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Demo page styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            background-color: #0a0a0a;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+            color: #ffffff;
+        }
+
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .demo-title {
+            color: #00d4ff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .demo-subtitle {
+            color: #ffffff;
+            opacity: 0.8;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .demo-btn {
+            padding: 1rem 2rem;
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+            border: 2px solid #00d4ff;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .demo-code {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        .demo-code h3 {
+            color: #00d4ff;
+            margin-top: 0;
+        }
+
+        .demo-code code {
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            display: block;
+            white-space: pre-wrap;
+        }
     </style>
 </head>
-<body class="profile-body">
-    
-    <!-- Navbar will be loaded here -->
-    <div id="navbar-container"></div>
-
-    <div class="profile-container">
-        <div class="profile-header">
-            <div class="profile-avatar-section">
-                <div class="profile-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-            </div>
+<body>
+    <!-- Demo Page Content -->
+    <div class="demo-container">
+        <h1 class="demo-title">Notification Popup Component</h1>
+        <p class="demo-subtitle">Dark theme notification popup with customizable content</p>
+        
+        <div class="demo-buttons">
+            <button class="demo-btn" onclick="showNotification('success', 'Profile updated successfully!', true, true)">
+                Success Notification
+            </button>
+            <button class="demo-btn" onclick="showNotification('warning', 'Are you sure you want to delete this item?', true, true)">
+                Confirmation Dialog
+            </button>
+            <button class="demo-btn" onclick="showNotification('info', 'Please check your email for verification link.', false, true)">
+                Info Notification
+            </button>
+            <button class="demo-btn" onclick="showNotification('error', 'Failed to save changes. Please try again.', true, false)">
+                Error Notification
+            </button>
         </div>
 
-        <div class="profile-sections">
-            <div class="profile-section">
-                <h2>Personal Information</h2>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label>Full Name</label>
-                        <p id="fullName">Loading...</p>
-                    </div>
-                    <div class="info-item">
-                        <label>Username</label>
-                        <p id="username">Loading...</p>
-                    </div>
-                    <div class="info-item">
-                        <label>Email</label>
-                        <p id="userEmail">Loading...</p>
-                    </div>
-                    <div class="info-item">
-                        <label>Phone Number</label>
-                        <p id="userPhone">Not provided</p>
-                    </div>
-                    <div class="info-item">
-                        <label>Street Address</label>
-                        <p id="userAddress">Not provided</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="profile-logout-section">
-                <button class="logout-btn-profile" id="logoutBtnProfile">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
-                </button>
-            </div>
+        <div class="demo-code">
+            <h3>Usage Example:</h3>
+            <code>// Show notification with custom content
+showNotification('info', 'Your custom message here', true, true);
+
+// Parameters:
+// 1. type: 'success', 'warning', 'info', 'error'
+// 2. body: Your custom message text
+// 3. showCancel: true/false (show cancel button)
+// 4. showOkay: true/false (show okay button)
+
+// Example usage in your pages:
+showNotification('success', 'Profile updated successfully!', false, true);
+showNotification('warning', 'Are you sure you want to logout?', true, true);</code>
         </div>
     </div>
 
@@ -232,30 +325,21 @@
                 </button>
                 <button class="notification-btn okay" id="okayBtn" onclick="hideNotification()">
                     <i class="fas fa-check"></i>
-                    <span>Confirm</span>
+                    <span>Okay</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <script src="../JS/script.js"></script>
-    <script src="../JS/profile.js"></script>
-    
     <script>
-        // Global variable to track current notification action
-        let currentNotificationAction = null;
-
         // Notification popup functionality
-        function showNotification(type = 'info', body = 'Notification message', showCancel = true, showOkay = true, onConfirm = null) {
+        function showNotification(type = 'info', body = 'Notification message', showCancel = true, showOkay = true) {
             const overlay = document.getElementById('notificationOverlay');
             const titleElement = document.getElementById('notificationTitle');
             const bodyElement = document.getElementById('notificationBody');
             const iconElement = document.getElementById('notificationIconElement');
             const cancelBtn = document.getElementById('cancelBtn');
             const okayBtn = document.getElementById('okayBtn');
-
-            // Store the confirmation action
-            currentNotificationAction = onConfirm;
 
             // Set content
             bodyElement.textContent = body;
@@ -267,7 +351,7 @@
                     icon: 'fas fa-check-circle'
                 },
                 warning: {
-                    title: 'Confirm Action',
+                    title: 'Warning',
                     icon: 'fas fa-exclamation-triangle'
                 },
                 error: {
@@ -288,52 +372,20 @@
             cancelBtn.style.display = showCancel ? 'flex' : 'none';
             okayBtn.style.display = showOkay ? 'flex' : 'none';
 
-            // Remove any existing event listeners and add new ones
-            const newCancelBtn = cancelBtn.cloneNode(true);
-            const newOkayBtn = okayBtn.cloneNode(true);
-            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
-            okayBtn.parentNode.replaceChild(newOkayBtn, okayBtn);
-
-            // Add event listeners
-            newCancelBtn.addEventListener('click', function() {
-                hideNotification();
-                currentNotificationAction = null;
-            });
-
-            newOkayBtn.addEventListener('click', function() {
-                hideNotification();
-                if (currentNotificationAction && typeof currentNotificationAction === 'function') {
-                    currentNotificationAction();
-                }
-                currentNotificationAction = null;
-            });
-
             // Show the notification
             overlay.classList.add('show');
 
-            // Auto-hide for info messages without confirmation action
-            if (type === 'info' && !onConfirm && !showCancel) {
+            // Auto-hide after 5 seconds if it's just an info message with no cancel button
+            if (!showCancel && type === 'info') {
                 setTimeout(() => {
                     hideNotification();
-                }, 4000);
+                }, 5000);
             }
         }
 
         function hideNotification() {
             const overlay = document.getElementById('notificationOverlay');
             overlay.classList.remove('show');
-            currentNotificationAction = null;
-        }
-
-        // Logout confirmation functionality
-        function performLogout() {
-            // Show success message first
-            showNotification('success', 'You have been logged out successfully!', false, true);
-            
-            // Redirect after showing success message
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000);
         }
 
         // Close on overlay click
@@ -350,23 +402,15 @@
             }
         });
 
-        // Enhanced logout button functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const logoutBtn = document.getElementById('logoutBtnProfile');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    // Show confirmation dialog with callback function
-                    showNotification(
-                        'warning', 
-                        'Are you sure you want to logout?', 
-                        true, 
-                        true, 
-                        performLogout  // This function will only be called if user clicks Confirm
-                    );
-                });
-            }
-        });
+        // Example function to demonstrate usage
+        function demonstrateUsage() {
+            // You can copy these functions to your other pages
+            console.log('Notification component ready!');
+            console.log('Use showNotification(type, body, showCancel, showOkay) to display notifications');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', demonstrateUsage);
     </script>
 </body>
-</html> 
+</html>
