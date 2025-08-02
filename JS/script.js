@@ -208,14 +208,17 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Authentication functions
-function handleSignup(username, email, password, role) {
+function handleSignup(fullName, username, email, password, role, address, phoneNumber) {
   return auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
       const user = userCredential.user;
       return db.collection('users').doc(user.uid).set({
+        fullName: fullName,
         username: username,
         email: email,
-        role: role
+        role: role,
+        address: address,
+        phoneNumber: phoneNumber
       });
     });
 }
@@ -235,6 +238,31 @@ function checkAuthState() {
       resolve(user);
     });
   });
+}
+
+// Function to load user profile data
+async function loadUserProfileData() {
+    try {
+        const user = await checkAuthState();
+        if (user) {
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                // Populate profile page elements
+                document.getElementById('fullName').textContent = userData.fullName || 'Not provided';
+                document.getElementById('username').textContent = userData.username || 'Not provided';
+                document.getElementById('userEmail').textContent = userData.email || 'Not provided';
+                document.getElementById('userPhone').textContent = userData.phoneNumber || 'Not provided';
+                document.getElementById('userAddress').textContent = userData.address || 'Not provided';
+            } else {
+                console.log('No such user document!');
+                showMessage('Could not find user profile data.', 'error');
+            }
+        }
+    } catch (error) {
+        console.error('Error loading user profile data:', error);
+        showMessage('Failed to load profile data.', 'error');
+    }
 }
 
 // Function to load HTML components
@@ -271,6 +299,11 @@ async function initializeApp() {
 
     // Set up event listeners based on current page
     setupEventListeners();
+    
+    // Load user profile data if on profile page
+    if (window.location.pathname.includes('profile.html')) {
+        await loadUserProfileData();
+    }
     
     // Initialize AI Assistant if on home page
     if (window.location.pathname.includes('home.html')) {
@@ -337,13 +370,16 @@ function setupEventListeners() {
     signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            const fullName = signupForm.fullName.value;
             const username = signupForm.signupUsername.value;
             const email = signupForm.signupEmail.value;
             const password = signupForm.signupPassword.value;
             const role = signupForm.signupRole.value;
+            const address = signupForm.address.value;
+            const phoneNumber = signupForm.phoneNumber.value;
 
       try {
-        await handleSignup(username, email, password, role);
+        await handleSignup(fullName, username, email, password, role, address, phoneNumber);
         showMessage('Sign up successful! Please log in.', 'success');
         setTimeout(() => {
           window.location.href = 'index.html';
