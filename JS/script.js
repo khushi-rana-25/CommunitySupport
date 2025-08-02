@@ -262,9 +262,25 @@ function setupEventListeners() {
         return;
       }
       try {
-        await handleLogin(email, password);
-        showMessage('Login successful!', 'success');
-        setTimeout(() => window.location.href = 'home.html', 1000);
+        const userCredential = await handleLogin(email, password);
+        const user = userCredential.user;
+        const userDoc = await db.collection('users').doc(user.uid).get();
+
+        if (userDoc.exists) {
+            const userData = userDoc.data();
+            showMessage('Login successful!', 'success');
+            if (userData.role === 'resident') {
+                setTimeout(() => window.location.href = 'home.html', 1000);
+            } else if (userData.role === 'community_manager') {
+                setTimeout(() => window.location.href = 'manager_home.html', 1000);
+            } else {
+                // Default redirect
+                setTimeout(() => window.location.href = 'home.html', 1000);
+            }
+        } else {
+            showMessage('Could not find user profile. Please contact support.', 'error');
+            await handleLogout();
+        }
       } catch (error) {
         showMessage(`Login failed: ${error.message}`, 'error');
       }

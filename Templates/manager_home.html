@@ -27,7 +27,71 @@
       <!-- Complaint cards will be loaded here dynamically -->
     </div>
   </div>
+  
+  <!-- Email Send Section -->
+  <div class="email-sender-container">
+    <h3 class="email-sender-title">Send a Broadcast Email</h3>
+    <div class="email-input-group">
+      <input type="text" id="emailMessage" placeholder="Enter your message here..." />
+      <!-- <input type="email" id="emailRecipient" placeholder="Enter recipient email (optional)" /> -->
+    </div>
+      <button id="sendEmailBtn">
+        <i class="fas fa-paper-plane"></i> Send
+      </button>
+    </div>
+    <div id="emailStatus"></div>
+  </div>
+
+<!-- EmailJS SDK -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script type="text/javascript">
+  const SERVICE_ID = "service_yx4neft";
+  const TEMPLATE_ID = "template_ff8lers";
+  const PUBLIC_KEY = "iBqdiE41TnX2JD3bn";
+
+  (function() {
+    emailjs.init({
+      publicKey: PUBLIC_KEY,
+    });
+  })();
+
+  document.getElementById('sendEmailBtn').addEventListener('click', function () {
+    const message = document.getElementById('emailMessage').value.trim();
+    // const recipient = document.getElementById('emailRecipient').value.trim() || "khushirana122004@gmail.com";
+    // if (!recipient) {
+    //   showStatus("❌ Please enter a recipient email.", "error");
+    //   return;
+    // }
+
+    if (!message) {
+      showStatus("❌ Please enter a message.", "error");
+      return;
+    }
+
+    const templateParams = {
+      email: "khushirana122004@gmail.com",
+      body: message
+    };
+
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+      .then(response => {
+        console.log("Email sent:", response);
+        showStatus("✅ Email sent successfully!", "success");
+      })
+      .catch(error => {
+        console.error("Email failed:", error);
+        showStatus("❌ Failed to send email. " + (error.text || error.message), "error");
+      });
+  });
+
+  function showStatus(msg, type) {
+    const statusDiv = document.getElementById('emailStatus');
+    statusDiv.textContent = msg;
+    statusDiv.style.color = type === "success" ? "green" : "red";
+  }
+</script>
   <script src="../JS/script.js"></script>
-  <script src="../JS/cavbar.js"></script>
+  <script src="../JS/cnavbar.js"></script>
 </body>
 </html>
