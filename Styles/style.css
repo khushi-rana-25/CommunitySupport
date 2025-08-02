@@ -1625,25 +1625,6 @@ a:hover {
   align-items: center;
 }
 
-/* Step Number */
-.step-number {
-  position: absolute;
-  top: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 1.2rem;
-  box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
-}
-
 /* Step Icon */
 .step-icon {
   margin: 1.5rem 0 1rem 0;
